@@ -1,0 +1,659 @@
+/* =========================
+   Global Styles
+   ========================= */
+
+:root {
+    --color-primary: #c62828;     /* Red */
+    --color-primary-dark: #8e0000;
+    --color-primary-light: #ffebee;
+    --color-bg: #f5f5f5;
+    --color-card-bg: #ffffff;
+    --color-text: #222;
+    --color-muted: #777;
+    --color-border: #e0e0e0;
+    --color-success: #2e7d32;
+    --color-danger: #d32f2f;
+    --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --radius: 8px;
+    --transition-fast: 0.15s ease-in-out;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    font-family: "Cairo", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    direction: rtl;
+}
+
+/* =========================
+   Top Bar
+   ========================= */
+
+.top-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1.5rem;
+    background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary));
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
+}
+
+.top-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.app-logo {
+    font-size: 1.6rem;
+}
+
+.app-title {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.top-bar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+}
+
+/* =========================
+   Main Layout
+   ========================= */
+
+.main-container {
+    max-width: 1200px;
+    margin: 1.5rem auto 4rem;
+    padding: 0 1rem;
+}
+
+/* =========================
+   Cards
+   ========================= */
+
+.card {
+    background-color: var(--color-card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1.5rem;
+}
+
+/* Login Card */
+.login-card {
+    max-width: 420px;
+    margin: 3rem auto;
+}
+
+/* =========================
+   Forms
+   ========================= */
+
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.form-group small {
+    display: block;
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: var(--color-muted);
+}
+
+input[type="text"],
+input[type="password"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color var(--transition-fast), box-shadow var(--transition-fast),
+        background-color var(--transition-fast);
+    background-color: #fff;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px rgba(198, 40, 40, 0.15);
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Buttons */
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    border: none;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--transition-fast), color var(--transition-fast),
+        box-shadow var(--transition-fast), transform var(--transition-fast);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background-color: #ffffff;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary-light);
+}
+
+.btn-secondary:hover {
+    background-color: var(--color-primary-light);
+}
+
+.btn-danger {
+    background-color: var(--color-danger);
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background-color: #b71c1c;
+}
+
+.btn.small {
+    padding: 0.3rem 0.75rem;
+    font-size: 0.85rem;
+}
+
+.btn:disabled,
+.btn[disabled] {
+    opacity: 0.65;
+    cursor: default;
+    box-shadow: none;
+    transform: none;
+}
+
+.full-width {
+    width: 100%;
+}
+
+/* =========================
+   Login
+   ========================= */
+
+#login-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+    text-align: center;
+    color: var(--color-primary-dark);
+}
+
+.login-info {
+    margin-top: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    background-color: #fffde7;
+    font-size: 0.85rem;
+    color: #795548;
+    border: 1px solid #ffe082;
+}
+
+/* Error & info messages */
+
+.error-message {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--color-danger);
+}
+
+.info-message {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}
+
+/* =========================
+   Tabs
+   ========================= */
+
+.app-section {
+    margin-top: 1rem;
+}
+
+.tabs-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.tab-btn {
+    flex: 1 1 auto;
+    padding: 0.6rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    background-color: #ffffff;
+    color: var(--color-primary-dark);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 1px 3px rgba(198, 40, 40, 0.2);
+    transition: background-color var(--transition-fast), color var(--transition-fast),
+        box-shadow var(--transition-fast), transform var(--transition-fast);
+}
+
+.tab-btn.active {
+    background: linear-gradient(90deg, var(--color-primary), var(--color-primary-dark));
+    color: #fff;
+    box-shadow: 0 2px 6px rgba(198, 40, 40, 0.4);
+    transform: translateY(-1px);
+}
+
+.tab-content {
+    display: none;
+    background-color: var(--color-card-bg);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-soft);
+    padding: 1.25rem 1.25rem 1.5rem;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    margin-top: 0;
+    color: var(--color-primary-dark);
+    font-size: 1.1rem;
+}
+
+.tab-desc {
+    font-size: 0.85rem;
+    color: var(--color-muted);
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
+
+/* =========================
+   Filters
+   ========================= */
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* =========================
+   Tables
+   ========================= */
+
+.table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: var(--radius);
+    border: 1px solid var(--color-border);
+    background-color: #fff;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.data-table thead {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+.data-table th,
+.data-table td {
+    padding: 0.5rem 0.75rem;
+    text-align: right;
+    font-size: 0.86rem;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.data-table th {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.data-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--color-primary-light);
+    cursor: pointer;
+}
+
+.data-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.empty-message {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+/* =========================
+   Warning Box
+   ========================= */
+
+.warning-box {
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--radius);
+    background-color: #fff3e0;
+    border: 1px solid #ffcc80;
+    color: #e65100;
+    font-size: 0.86rem;
+}
+
+/* =========================
+   Search Form
+   ========================= */
+
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+/* =========================
+   Grid layout (Admins form)
+   ========================= */
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem 1rem;
+}
+
+.grid-2 .full-width {
+    grid-column: 1 / -1;
+}
+
+.permissions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.35rem 1rem;
+    margin-top: 0.35rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.85rem;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+}
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+/* =========================
+   Modals
+   ========================= */
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.modal-content {
+    position: relative;
+    max-width: 700px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem 1.5rem 1.25rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-content h3 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+    color: var(--color-primary-dark);
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: 0.5rem;
+}
+
+.modal-content h4 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.modal-close {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem; /* RTL: close on left side */
+    border: none;
+    background: transparent;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: var(--color-muted);
+    transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+.modal-close:hover {
+    color: var(--color-danger);
+    transform: scale(1.1);
+}
+
+.modal-section {
+    margin-top: 0.75rem;
+}
+
+.modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    margin-top: 0.75rem;
+}
+
+/* Request modal body details */
+
+#request-modal-body,
+#complaint-modal-body {
+    font-size: 0.9rem;
+}
+
+.detail-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 0.4rem;
+}
+
+.detail-label {
+    font-weight: 600;
+    margin-left: 0.25rem;
+}
+
+/* ID Photo */
+
+.id-photo-preview {
+    max-width: 250px;
+    max-height: 250px;
+    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    display: block;
+    margin-top: 0.3rem;
+}
+
+/* =========================
+   Global Loader
+   ========================= */
+
+.global-loader {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 120;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid rgba(198, 40, 40, 0.25);
+    border-top-color: var(--color-primary);
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* =========================
+   Footer
+   ========================= */
+
+.app-footer {
+    text-align: center;
+    padding: 0.75rem 1rem 1.5rem;
+    font-size: 0.85rem;
+    color: var(--color-muted);
+}
+
+.app-footer a {
+    color: var(--color-primary-dark);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.app-footer a:hover {
+    text-decoration: underline;
+}
+
+/* =========================
+   Misc
+   ========================= */
+
+code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 0.85rem;
+    background-color: #f3f3f3;
+    padding: 0.08rem 0.3rem;
+    border-radius: 4px;
+}
+
+/* =========================
+   Responsive
+   ========================= */
+
+@media (max-width: 768px) {
+    .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+
+    .main-container {
+        margin-top: 1rem;
+        padding: 0 0.75rem;
+    }
+
+    .tabs-nav {
+        flex-direction: column;
+    }
+
+    .data-table {
+        min-width: 100%;
+        font-size: 0.8rem;
+    }
+
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        max-width: 95%;
+        padding: 1.25rem 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .top-bar {
+        padding-inline: 1rem;
+    }
+
+    .app-title {
+        font-size: 0.85rem;
+    }
+
+    .login-card {
+        margin-top: 2rem;
+    }
+}

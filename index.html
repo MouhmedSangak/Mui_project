@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8" />
+    <title>نظام الشكاوي والاقتراحات الجامعي - لوحة التحكم</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- الخط (اختياري) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap"
+        rel="stylesheet"
+    />
+</head>
+<body>
+    <!-- Top Bar -->
+    <header class="top-bar">
+        <div class="top-bar-left">
+            <span class="app-logo">🎓</span>
+            <span class="app-title">نظام الشكاوي والاقتراحات الجامعي - لوحة التحكم</span>
+        </div>
+        <div class="top-bar-right" id="top-bar-right">
+            <!-- يتم تعبئته من JavaScript حسب حالة تسجيل الدخول -->
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+        <!-- Login Section -->
+        <section id="login-section" class="card login-card">
+            <h2>تسجيل دخول المسؤول</h2>
+            <form id="login-form" action="javascript:void(0)">
+                <div class="form-group">
+                    <label for="login-username">اسم المستخدم</label>
+                    <input
+                        type="text"
+                        id="login-username"
+                        name="username"
+                        placeholder="اكتب اسم المستخدم"
+                        autocomplete="username"
+                        required
+                    />
+                </div>
+                <div class="form-group">
+                    <label for="login-password">كلمة المرور</label>
+                    <input
+                        type="password"
+                        id="login-password"
+                        name="password"
+                        placeholder="اكتب كلمة المرور"
+                        autocomplete="current-password"
+                        required
+                    />
+                </div>
+                <!-- زر الدخول بعد التعديل -->
+                <button type="submit" class="btn btn-primary full-width">دخول</button>
+
+
+                <p id="login-error" class="error-message" style="display: none;"></p>
+            </form>
+
+            <div class="login-info">
+                <p>يتم التحقق من بيانات الدخول من جدول <code>admins</code> في قاعدة البيانات.</p>
+            </div>
+        </section>
+
+        <!-- App Section (hidden before login) -->
+        <section id="app-section" class="app-section" style="display: none;">
+            <!-- Tabs Navigation -->
+            <nav class="tabs-nav">
+                <button
+                    class="tab-btn active"
+                    data-tab="tab-requests"
+                    id="tab-btn-requests"
+                >
+                    طلبات التسجيل
+                </button>
+                <button
+                    class="tab-btn"
+                    data-tab="tab-complaints"
+                    id="tab-btn-complaints"
+                >
+                    إدارة الشكاوي
+                </button>
+                <button
+                    class="tab-btn"
+                    data-tab="tab-students"
+                    id="tab-btn-students"
+                >
+                    البحث عن الطلاب
+                </button>
+                <button
+                    class="tab-btn"
+                    data-tab="tab-admins"
+                    id="tab-btn-admins"
+                >
+                    إدارة المسؤولين
+                </button>
+            </nav>
+
+            <!-- Tabs Content -->
+            <section id="tab-requests" class="tab-content active">
+                <h2>مراجعة طلبات التسجيل</h2>
+                <p class="tab-desc">
+                    هذه الصفحة تعرض الطلبات الموجودة في جدول <code>pending_users</code>.
+                    يمكن قبول أو رفض الطلب، مع إمكانية مشاهدة كل البيانات بما في ذلك كلمة مرور SIS.
+                </p>
+
+                <div id="requests-permission-warning" class="warning-box" style="display: none;">
+                    لا تمتلك صلاحية "مراجعة طلبات التسجيل". تواصل مع المسؤول الأعلى (Owner).
+                </div>
+
+                <div id="requests-table-wrapper" class="table-wrapper">
+                    <table class="data-table" id="requests-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الكود الجامعي</th>
+                                <th>السنة</th>
+                                <th>الموبايل</th>
+                                <th>الحالة</th>
+                                <th>تاريخ الطلب</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requests-tbody">
+                            <!-- يتم تعبئته ديناميكياً -->
+                        </tbody>
+                    </table>
+                    <div id="requests-empty" class="empty-message" style="display: none;">
+                        لا توجد طلبات تسجيل حالياً.
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-complaints" class="tab-content">
+                <h2>إدارة الشكاوي</h2>
+                <p class="tab-desc">
+                    عرض الشكاوي من جدول <code>complaints</code> مع إمكانيات التصفية، تتبع حالة الشكوى،
+                    والرد عليها، ووضع علامة تمت المراجعة. مالك النظام (Owner) يستطيع رؤية اسم المسؤول الذي رد على الشكوى.
+                </p>
+
+                <!-- Filters -->
+                <div class="filters">
+                    <div class="form-group">
+                        <label for="filter-status">الحالة</label>
+                        <select id="filter-status">
+                            <option value="all">الكل</option>
+                            <option value="new">جديد</option>
+                            <option value="in_progress">قيد المراجعة</option>
+                            <option value="replied">تم الرد</option>
+                            <option value="reviewed">تمت المراجعة</option>
+                            <option value="closed">مغلقة</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-date">المدة الزمنية</label>
+                        <select id="filter-date">
+                            <option value="all">الكل</option>
+                            <option value="today">اليوم</option>
+                            <option value="week">هذا الأسبوع</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-year">السنة الدراسية</label>
+                        <select id="filter-year">
+                            <option value="all">الكل</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filter-order">ترتيب</label>
+                        <select id="filter-order">
+                            <option value="newest">الأحدث أولاً</option>
+                            <option value="oldest">الأقدم أولاً</option>
+                        </select>
+                    </div>
+                    <button id="btn-apply-filters" class="btn btn-secondary small">
+                        تطبيق الفلاتر
+                    </button>
+                </div>
+
+                <div id="complaints-permission-warning" class="warning-box" style="display: none;">
+                    لا تمتلك صلاحيات كافية لاستعراض أو تعديل الشكاوي.
+                </div>
+
+                <div id="complaints-table-wrapper" class="table-wrapper">
+                    <table class="data-table" id="complaints-table">
+                        <thead>
+                            <tr>
+                                <th>رقم التذكرة</th>
+                                <th>اسم الطالب</th>
+                                <th>الكود</th>
+                                <th>السنة</th>
+                                <th>الحالة</th>
+                                <th>تاريخ الإرسال</th>
+                            </tr>
+                        </thead>
+                        <tbody id="complaints-tbody">
+                            <!-- يتم تعبئته ديناميكياً -->
+                        </tbody>
+                    </table>
+                    <div id="complaints-empty" class="empty-message" style="display: none;">
+                        لا توجد شكاوي مطابقة للفلاتر الحالية.
+                    </div>
+                </div>
+            </section>
+
+            <section id="tab-students" class="tab-content">
+                <h2>البحث عن الطلاب</h2>
+                <p class="tab-desc">
+                    البحث في جدول <code>users</code> باستخدام الكود الجامعي أو اسم الطالب.
+                </p>
+
+                <div id="students-permission-warning" class="warning-box" style="display: none;">
+                    لا تمتلك صلاحية "البحث عن الطلاب". تواصل مع المسؤول الأعلى (Owner).
+                </div>
+
+                <form id="student-search-form" class="search-form">
+                    <div class="form-group">
+                        <label for="search-query">الاسم أو الكود الجامعي</label>
+                        <input
+                            type="text"
+                            id="search-query"
+                            placeholder="اكتب الاسم أو الكود الجامعي"
+                        />
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        بحث
+                    </button>
+                </form>
+
+                <div id="students-results-wrapper" class="table-wrapper" style="display: none;">
+                    <table class="data-table" id="students-table">
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الكود الجامعي</th>
+                                <th>السنة</th>
+                                <th>الموبايل</th>
+                                <th>الرقم القومي</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-tbody">
+                            <!-- يتم تعبئته ديناميكياً -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="students-empty" class="empty-message" style="display: none;">
+                    لا يوجد طلاب مطابقين لنتيجة البحث.
+                </div>
+            </section>
+
+            <section id="tab-admins" class="tab-content">
+                <h2>إدارة المسؤولين</h2>
+                <p class="tab-desc">
+                    هذه الصفحة متاحة فقط لمالك النظام (<code>role = 'owner'</code>).
+                    يمكن من خلالها إضافة مسؤولين جدد وتحديد صلاحياتهم بالتفصيل، بما في ذلك
+                    صلاحية "مراجعة طلبات التسجيل".
+                </p>
+
+                <div id="admins-owner-warning" class="warning-box" style="display: none;">
+                    هذه الصفحة متاحة فقط لمالك النظام (Owner).
+                </div>
+
+                <div id="admins-content" style="display: none;">
+                    <h3>إضافة مسؤول جديد</h3>
+                    <form id="add-admin-form" class="grid-2">
+                        <div class="form-group">
+                            <label for="admin-full-name">الاسم الكامل</label>
+                            <input
+                                type="text"
+                                id="admin-full-name"
+                                placeholder="الاسم"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-username">اسم المستخدم</label>
+                            <input
+                                type="text"
+                                id="admin-username"
+                                placeholder="اسم المستخدم"
+                                required
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-password">كلمة المرور</label>
+                            <input
+                                type="password"
+                                id="admin-password"
+                                placeholder="كلمة المرور"
+                                required
+                            />
+                            <small>سيتم حفظ كلمة المرور في شكل مشفر (hash) داخل قاعدة البيانات.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-role">الدور (Role)</label>
+                            <select id="admin-role">
+                                <option value="admin">Admin</option>
+                                <option value="owner">Owner</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label>الصلاحيات</label>
+                            <div class="permissions-grid">
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="perm-view-complaints"
+                                        checked
+                                    />
+                                    عرض الشكاوي (view_complaints)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="perm-reply-complaints"
+                                        checked
+                                    />
+                                    الرد على الشكاوي (reply_complaints)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="perm-mark-reviewed"
+                                        checked
+                                    />
+                                    وضع علامة تمت المراجعة (mark_reviewed)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="perm-search-students"
+                                        checked
+                                    />
+                                    البحث عن الطلاب (search_students)
+                                </label>
+                                <label class="checkbox-label">
+                                    <input
+                                        type="checkbox"
+                                        id="perm-review-accounts"
+                                        checked
+                                    />
+                                    مراجعة طلبات التسجيل (review_accounts)
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-actions full-width">
+                            <button type="submit" class="btn btn-primary">
+                                إضافة المسؤول
+                            </button>
+                            <p id="add-admin-message" class="info-message"></p>
+                        </div>
+                    </form>
+
+                    <h3>قائمة المسؤولين الحالية</h3>
+                    <div class="table-wrapper">
+                        <table class="data-table" id="admins-table">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>اسم المستخدم</th>
+                                    <th>الدور</th>
+                                    <th>حالة التفعيل</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admins-tbody">
+                                <!-- يتم تعبئته ديناميكياً -->
+                            </tbody>
+                        </table>
+                        <div id="admins-empty" class="empty-message" style="display: none;">
+                            لا يوجد مسؤولين مسجلين (باستثناء المالك الحالي).
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </main>
+
+    <!-- Request Details Modal -->
+    <div id="request-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" id="request-modal-close">&times;</button>
+            <h3>تفاصيل طلب التسجيل</h3>
+            <div id="request-modal-body">
+                <!-- يتم تعبئته من JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button id="btn-accept-request" class="btn btn-primary">
+                    قبول الطالب
+                </button>
+                <button id="btn-reject-request" class="btn btn-danger">
+                    رفض الطلب
+                </button>
+            </div>
+            <p id="request-modal-message" class="info-message"></p>
+        </div>
+    </div>
+
+    <!-- Complaint Details Modal -->
+    <div id="complaint-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" id="complaint-modal-close">&times;</button>
+            <h3>تفاصيل الشكوى</h3>
+            <div id="complaint-modal-body">
+                <!-- يتم تعبئته من JavaScript -->
+            </div>
+
+            <div id="complaint-reply-section" class="modal-section">
+                <h4>الرد على الشكوى</h4>
+                <textarea
+                    id="complaint-reply-text"
+                    rows="4"
+                    placeholder="اكتب رد المسؤول هنا..."
+                ></textarea>
+                <div class="modal-actions">
+                    <button id="btn-save-reply" class="btn btn-primary">
+                        حفظ الرد
+                    </button>
+                    <button id="btn-mark-reviewed" class="btn btn-secondary">
+                        وضع علامة تمت المراجعة
+                    </button>
+                </div>
+                <p id="complaint-modal-message" class="info-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Global loader / overlay -->
+    <div id="global-loader" class="global-loader" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        <p>
+            <a href="https://facebook.com/MSANGAK27" target="_blank" rel="noopener noreferrer">
+                مصمم بواسطة محمد
+            </a>
+            -
+            <a href="https://facebook.com/MSANGAK27" target="_blank" rel="noopener noreferrer">
+                Designed by Mohamed
+            </a>
+        </p>
+    </footer>
+
+    <!-- Main script (Supabase + logic) -->
+    <script src="script.js"></script>
+</body>
+</html>
