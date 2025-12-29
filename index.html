@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="لوحة التحكم الإدارية - نظام الشكاوى والمقترحات - جامعة ميريت مصر">
+    <meta name="author" content="Mohamed - محمد">
+    
+    <title>لوحة التحكم | نظام الشكاوى والمقترحات - جامعة ميريت</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="logo.png">
+    
+    <!-- Google Fonts - Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ============================================================ -->
+    <!-- شاشة التحميل -->
+    <!-- ============================================================ -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <img src="logo.png" alt="شعار جامعة ميريت" class="loading-logo">
+            <div class="loading-spinner"></div>
+            <p>جارٍ التحميل...</p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- صفحة تسجيل الدخول -->
+    <!-- ============================================================ -->
+    <div id="login-page" class="page login-page">
+        <div class="login-container">
+            <!-- الشعار -->
+            <div class="login-header">
+                <img src="logo.png" alt="شعار جامعة ميريت" class="login-logo">
+                <h1>نظام الشكاوى والمقترحات</h1>
+                <h2>جامعة ميريت - مصر</h2>
+                <p class="login-subtitle">لوحة التحكم الإدارية</p>
+            </div>
+            
+            <!-- نموذج تسجيل الدخول -->
+            <form id="login-form" class="login-form">
+                <div class="form-group">
+                    <label for="login-username">
+                        <i class="fas fa-user"></i>
+                        اسم المستخدم
+                    </label>
+                    <input 
+                        type="text" 
+                        id="login-username" 
+                        name="username" 
+                        placeholder="أدخل اسم المستخدم"
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">
+                        <i class="fas fa-lock"></i>
+                        كلمة المرور
+                    </label>
+                    <div class="password-input-wrapper">
+                        <input 
+                            type="password" 
+                            id="login-password" 
+                            name="password" 
+                            placeholder="أدخل كلمة المرور"
+                            required
+                            autocomplete="current-password"
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('login-password', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="login-error" class="error-message" style="display: none;">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span></span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-login">
+                    <i class="fas fa-sign-in-alt"></i>
+                    تسجيل الدخول
+                </button>
+            </form>
+            
+            <!-- معلومات إضافية -->
+            <div class="login-info">
+                <p><i class="fas fa-shield-alt"></i> اتصال آمن ومشفر</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- لوحة التحكم الرئيسية -->
+    <!-- ============================================================ -->
+    <div id="dashboard-page" class="page dashboard-page" style="display: none;">
+        
+        <!-- ======================================== -->
+        <!-- الشريط العلوي (Header) -->
+        <!-- ======================================== -->
+        <header class="dashboard-header">
+            <div class="header-right">
+                <!-- زر القائمة - 3 خطوط -->
+                <button class="menu-toggle" id="menuToggle" aria-label="فتح القائمة">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+                
+                <img src="logo.png" alt="شعار جامعة ميريت" class="header-logo">
+                <div class="header-title">
+                    <h1>نظام الشكاوى والمقترحات</h1>
+                    <span>جامعة ميريت - مصر</span>
+                </div>
+            </div>
+            
+            <div class="header-left">
+                <div class="admin-info">
+                    <div class="admin-avatar" id="admin-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="admin-details">
+                        <span class="admin-name" id="admin-name">المسؤول</span>
+                        <span class="admin-role" id="admin-role">مسؤول</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>تسجيل الخروج</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- الـ Overlay خلف القائمة -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- ======================================== -->
+        <!-- المحتوى الرئيسي -->
+        <!-- ======================================== -->
+        <main class="dashboard-main">
+            
+            <!-- ==================== -->
+            <!-- القائمة الجانبية -->
+            <!-- ==================== -->
+            <aside class="sidebar" id="sidebar">
+                <nav class="sidebar-nav">
+                    <ul>
+                        <li>
+                            <a href="#" class="nav-link active" data-tab="overview">
+                                <i class="fas fa-home"></i>
+                                <span>الرئيسية</span>
+                            </a>
+                        </li>
+                        <li id="nav-account-requests">
+                            <a href="#" class="nav-link" data-tab="account-requests">
+                                <i class="fas fa-user-plus"></i>
+                                <span>طلبات التسجيل</span>
+                                <span class="badge" id="pending-requests-badge" style="display: none;">0</span>
+                            </a>
+                        </li>
+                        <li id="nav-complaints">
+                            <a href="#" class="nav-link" data-tab="complaints">
+                                <i class="fas fa-envelope"></i>
+                                <span>الشكاوى والمقترحات</span>
+                                <span class="badge" id="pending-complaints-badge" style="display: none;">0</span>
+                            </a>
+                        </li>
+                        <li id="nav-students">
+                            <a href="#" class="nav-link" data-tab="students">
+                                <i class="fas fa-users"></i>
+                                <span>البحث عن الطلاب</span>
+                            </a>
+                        </li>
+                        <li id="nav-admins" style="display: none;">
+                            <a href="#" class="nav-link" data-tab="admins">
+                                <i class="fas fa-user-shield"></i>
+                                <span>إدارة المسؤولين</span>
+                            </a>
+                        </li>
+                        <!-- ✅ تم تعديل الإعدادات لتظهر لكل المسؤولين -->
+                        <li id="nav-settings">
+                            <a href="#" class="nav-link" data-tab="settings">
+                                <i class="fas fa-cog"></i>
+                                <span>الإعدادات</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- ==================== -->
+            <!-- منطقة المحتوى -->
+            <!-- ==================== -->
+            <div class="content-area">
+                
+                <!-- ==================== -->
+                <!-- تبويب الرئيسية -->
+                <!-- ==================== -->
+                <section id="tab-overview" class="tab-content active">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-home"></i> نظرة عامة</h2>
+                        <p>مرحباً بكم في لوحة التحكم الإدارية</p>
+                    </div>
+                    
+                    <!-- بطاقات الإحصائيات -->
+                    <div class="stats-grid">
+                        <div class="stat-card stat-pending">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="stat-pending-requests">0</h3>
+                                <p>طلبات تسجيل معلقة</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card stat-complaints">
+                            <div class="stat-icon">
+                                <i class="fas fa-envelope-open-text"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="stat-pending-complaints">0</h3>
+                                <p>شكاوى بانتظار الرد</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card stat-students">
+                            <div class="stat-icon">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="stat-total-students">0</h3>
+                                <p>إجمالي الطلاب المسجلين</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card stat-total">
+                            <div class="stat-icon">
+                                <i class="fas fa-clipboard-list"></i>
+                            </div>
+                            <div class="stat-info">
+                                <h3 id="stat-total-complaints">0</h3>
+                                <p>إجمالي الشكاوى</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- أحدث الشكاوى -->
+                    <div class="recent-section">
+                        <div class="section-header">
+                            <h3><i class="fas fa-clock"></i> أحدث الشكاوى</h3>
+                            <a href="#" class="view-all-link" onclick="switchTab('complaints'); return false;">
+                                عرض الكل <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>رقم الشكوي</th>
+                                        <th>الطالب</th>
+                                        <th>السنة</th>
+                                        <th>الحالة</th>
+                                        <th>التاريخ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-complaints-table">
+                                    <tr>
+                                        <td colspan="5" class="empty-state">
+                                            <i class="fas fa-inbox"></i>
+                                            <p>لا توجد شكاوى حتى الآن</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ==================== -->
+                <!-- تبويب طلبات التسجيل -->
+                <!-- ==================== -->
+                <section id="tab-account-requests" class="tab-content">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-user-plus"></i> طلبات التسجيل</h2>
+                        <p>مراجعة طلبات التسجيل الجديدة والموافقة عليها أو رفضها</p>
+                    </div>
+                    
+                    <!-- فلاتر -->
+                    <div class="filters-bar">
+                        <div class="filter-group">
+                            <label>الحالة:</label>
+                            <select id="filter-request-status" onchange="filterAccountRequests()">
+                                <option value="pending">قيد الانتظار</option>
+                                <option value="approved">مقبولة</option>
+                                <option value="rejected">مرفوضة</option>
+                                <option value="all">الكل</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>السنة:</label>
+                            <select id="filter-request-year" onchange="filterAccountRequests()">
+                                <option value="all">جميع السنوات</option>
+                                <option value="first">السنة الأولى</option>
+                                <option value="second">السنة الثانية</option>
+                                <option value="third">السنة الثالثة</option>
+                                <option value="fourth">السنة الرابعة</option>
+                                <option value="fifth">السنة الخامسة</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="loadAccountRequests()">
+                            <i class="fas fa-sync-alt"></i>
+                            تحديث
+                        </button>
+                    </div>
+                    
+                    <!-- جدول الطلبات -->
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>الكود الجامعي</th>
+                                    <th>السنة</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>تاريخ الطلب</th>
+                                    <th>الحالة</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="account-requests-table">
+                                <tr>
+                                    <td colspan="7" class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>لا توجد طلبات تسجيل</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ==================== -->
+                <!-- تبويب الشكاوى -->
+                <!-- ==================== -->
+                <section id="tab-complaints" class="tab-content">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-envelope"></i> الشكاوى والمقترحات</h2>
+                        <p>إدارة الشكاوى والمقترحات المقدمة من الطلاب</p>
+                    </div>
+                    
+                    <!-- شريط البحث والفلاتر -->
+                    <div class="filters-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input 
+                                type="text" 
+                                id="complaints-search" 
+                                placeholder="البحث برقم الشكوي أو الكود الجامعي..."
+                                onkeyup="searchComplaints()"
+                            >
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>الحالة:</label>
+                            <select id="filter-complaint-status" onchange="filterComplaints()">
+                                <option value="all">الكل</option>
+                                <option value="pending">قيد الانتظار</option>
+                                <option value="reviewed">تمت المراجعة</option>
+                                <option value="replied">تم الرد</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>السنة:</label>
+                            <select id="filter-complaint-year" onchange="filterComplaints()">
+                                <option value="all">جميع السنوات</option>
+                                <option value="first">السنة الأولى</option>
+                                <option value="second">السنة الثانية</option>
+                                <option value="third">السنة الثالثة</option>
+                                <option value="fourth">السنة الرابعة</option>
+                                <option value="fifth">السنة الخامسة</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>الفترة:</label>
+                            <select id="filter-complaint-period" onchange="filterComplaints()">
+                                <option value="all">كل الأوقات</option>
+                                <option value="today">اليوم</option>
+                                <option value="week">هذا الأسبوع</option>
+                                <option value="month">هذا الشهر</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>الترتيب:</label>
+                            <select id="filter-complaint-sort" onchange="filterComplaints()">
+                                <option value="newest">الأحدث أولاً</option>
+                                <option value="oldest">الأقدم أولاً</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="loadComplaints()">
+                            <i class="fas fa-sync-alt"></i>
+                            تحديث
+                        </button>
+                    </div>
+                    
+                    <!-- جدول الشكاوى -->
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>رقم الشكوي</th>
+                                    <th>الطالب</th>
+                                    <th>الكود</th>
+                                    <th>السنة</th>
+                                    <th>المحتوى</th>
+                                    <th>الحالة</th>
+                                    <th>التاريخ</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="complaints-table">
+                                <tr>
+                                    <td colspan="8" class="empty-state">
+                                        <i class="fas fa-inbox"></i>
+                                        <p>لا توجد شكاوى</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- ترقيم الصفحات -->
+                    <div class="pagination" id="complaints-pagination">
+                        <!-- سيتم إنشاؤها ديناميكياً -->
+                    </div>
+                </section>
+
+                <!-- ==================== -->
+                <!-- تبويب البحث عن الطلاب -->
+                <!-- ==================== -->
+                <section id="tab-students" class="tab-content">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-users"></i> البحث عن الطلاب</h2>
+                        <p>البحث في قاعدة بيانات الطلاب المسجلين</p>
+                    </div>
+                    
+                    <!-- شريط البحث -->
+                    <div class="filters-bar">
+                        <div class="search-box large">
+                            <i class="fas fa-search"></i>
+                            <input 
+                                type="text" 
+                                id="students-search" 
+                                placeholder="البحث بالاسم أو الكود الجامعي..."
+                                onkeyup="searchStudents()"
+                            >
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>السنة:</label>
+                            <select id="filter-student-year" onchange="filterStudents()">
+                                <option value="all">جميع السنوات</option>
+                                <option value="first">السنة الأولى</option>
+                                <option value="second">السنة الثانية</option>
+                                <option value="third">السنة الثالثة</option>
+                                <option value="fourth">السنة الرابعة</option>
+                                <option value="fifth">السنة الخامسة</option>
+                            </select>
+                        </div>
+                        
+                        <button class="btn btn-secondary" onclick="loadStudents()">
+                            <i class="fas fa-sync-alt"></i>
+                            تحديث
+                        </button>
+                    </div>
+                    
+                    <!-- جدول الطلاب -->
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>الاسم</th>
+                                    <th>الكود الجامعي</th>
+                                    <th>السنة</th>
+                                    <th>رقم الهاتف</th>
+                                    <th>تاريخ التسجيل</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-table">
+                                <tr>
+                                    <td colspan="6" class="empty-state">
+                                        <i class="fas fa-users"></i>
+                                        <p>لا يوجد طلاب مسجلون</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ==================== -->
+                <!-- تبويب إدارة المسؤولين -->
+                <!-- ==================== -->
+                <section id="tab-admins" class="tab-content">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-user-shield"></i> إدارة المسؤولين</h2>
+                        <p>إضافة وتعديل صلاحيات المسؤولين في النظام</p>
+                    </div>
+                    
+                    <!-- زر إضافة مسؤول -->
+                    <div class="actions-bar">
+                        <button class="btn btn-primary" onclick="openAddAdminModal()">
+                            <i class="fas fa-plus"></i>
+                            إضافة مسؤول جديد
+                        </button>
+                    </div>
+                    
+                    <!-- جدول المسؤولين -->
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>الصورة</th>
+                                    <th>الاسم</th>
+                                    <th>اسم المستخدم</th>
+                                    <!-- ✅ عمود كلمة المرور للمالك -->
+                                    <th id="th-admin-password" style="display: none;">كلمة المرور</th>
+                                    <th>الصلاحيات</th>
+                                    <th>آخر دخول</th>
+                                    <th>الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admins-table">
+                                <tr>
+                                    <td colspan="7" class="empty-state">
+                                        <i class="fas fa-user-shield"></i>
+                                        <p>لا يوجد مسؤولون</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- ==================== -->
+                <!-- تبويب الإعدادات -->
+                <!-- ==================== -->
+                <section id="tab-settings" class="tab-content">
+                    <div class="tab-header">
+                        <h2><i class="fas fa-cog"></i> الإعدادات</h2>
+                        <p>إعدادات النظام والحساب الشخصي</p>
+                    </div>
+                    
+                    <div class="settings-container">
+                        
+                        <!-- ✅ إعدادات الحساب الشخصي (لكل المسؤولين) -->
+                        <div class="settings-section">
+                            <h3><i class="fas fa-user-cog"></i> إعدادات حسابي</h3>
+                            
+                            <div class="profile-settings-form">
+                                <div class="profile-photo-section">
+                                    <div class="profile-photo-preview" id="my-profile-photo">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="profile-photo-upload">
+                                        <label for="my-photo-upload" class="btn btn-secondary btn-sm">
+                                            <i class="fas fa-camera"></i>
+                                            تغيير الصورة
+                                        </label>
+                                        <input type="file" id="my-photo-upload" accept="image/*" onchange="previewMyPhoto(this)" style="display: none;">
+                                        <p class="upload-hint">PNG, JPG حتى 2MB</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-id-badge"></i> الاسم الظاهر</label>
+                                        <input type="text" id="my-display-name" placeholder="الاسم الظاهر">
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-user"></i> اسم المستخدم</label>
+                                        <input type="text" id="my-username" placeholder="اسم المستخدم">
+                                    </div>
+                                </div>
+                                
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label><i class="fas fa-lock"></i> كلمة المرور الحالية</label>
+                                        <div class="password-input-wrapper">
+                                            <input type="password" id="my-current-password" placeholder="كلمة المرور الحالية">
+                                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('my-current-password', this)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label><i class="fas fa-key"></i> كلمة المرور الجديدة</label>
+                                        <div class="password-input-wrapper">
+                                            <input type="password" id="my-new-password" placeholder="كلمة مرور جديدة (اختياري)">
+                                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('my-new-password', this)">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions">
+                                    <button class="btn btn-primary" onclick="saveMyProfile()">
+                                        <i class="fas fa-save"></i>
+                                        حفظ التغييرات
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- إعدادات النظام (للمالك فقط) -->
+                        <div id="system-settings-section" style="display: none;">
+                            
+                            <!-- إعدادات عامة -->
+                            <div class="settings-section">
+                                <h3><i class="fas fa-sliders-h"></i> إعدادات عامة</h3>
+                                
+                                <div class="setting-item">
+                                    <div class="setting-info">
+                                        <label>السماح بإعادة التسجيل بعد الرفض</label>
+                                        <p>السماح للطلاب بتقديم طلب تسجيل جديد بعد رفض طلبهم السابق</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" id="setting-allow-reregister" onchange="updateSetting('allow_reregister_if_rejected', this.checked)">
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- إعدادات الحماية من السبام -->
+                            <div class="settings-section">
+                                <h3><i class="fas fa-shield-alt"></i> الحماية من السبام</h3>
+                                
+                                <div class="setting-item">
+                                    <div class="setting-info">
+                                        <label>الحد الأقصى للرسائل</label>
+                                        <p>عدد الشكاوى المسموح بها قبل الحظر المؤقت</p>
+                                    </div>
+                                    <input type="number" id="setting-spam-limit" class="setting-input" min="1" max="20" value="5" onchange="updateSetting('spam_limit_messages', this.value)">
+                                </div>
+                                
+                                <div class="setting-item">
+                                    <div class="setting-info">
+                                        <label>فترة الحساب (بالدقائق)</label>
+                                        <p>الفترة الزمنية لحساب عدد الرسائل</p>
+                                    </div>
+                                    <input type="number" id="setting-spam-minutes" class="setting-input" min="1" max="60" value="5" onchange="updateSetting('spam_limit_minutes', this.value)">
+                                </div>
+                                
+                                <div class="setting-item">
+                                    <div class="setting-info">
+                                        <label>مدة الحظر (بالدقائق)</label>
+                                        <p>مدة الحظر المؤقت عند تجاوز الحد</p>
+                                    </div>
+                                    <input type="number" id="setting-block-minutes" class="setting-input" min="1" max="60" value="5" onchange="updateSetting('spam_block_minutes', this.value)">
+                                </div>
+                            </div>
+                            
+                            <!-- معرفات التيليجرام للمسؤولين -->
+                            <div class="settings-section">
+                                <h3><i class="fab fa-telegram"></i> إشعارات التيليجرام</h3>
+                                
+                                <div class="setting-item">
+                                    <div class="setting-info">
+                                        <label>معرفات التيليجرام للمسؤولين</label>
+                                        <p>أدخل معرفات التيليجرام (مفصولة بفواصل) لاستلام إشعارات التسجيل الجديد</p>
+                                    </div>
+                                    <textarea id="setting-admin-telegram-ids" class="setting-textarea" placeholder="مثال: 123456789, 987654321" onchange="updateAdminTelegramIds()"></textarea>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </section>
+                
+            </div>
+        </main>
+
+        <!-- ======================================== -->
+        <!-- الفوتر -->
+        <!-- ======================================== -->
+        <footer class="dashboard-footer">
+            <div class="footer-content">
+                <p>
+                    مصمم بواسطة 
+                    <a href="https://facebook.com/MSANGAK27" target="_blank" rel="noopener">محمد</a>
+                    - 
+                    Designed by 
+                    <a href="https://facebook.com/MSANGAK27" target="_blank" rel="noopener">Mohamed</a>
+                </p>
+                <p class="footer-year">© <span id="current-year"></span> جامعة ميريت - مصر | جميع الحقوق محفوظة</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- النوافذ المنبثقة (Modals) -->
+    <!-- ============================================================ -->
+    
+    <!-- خلفية النوافذ المنبثقة -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closeAllModals()"></div>
+    
+    <!-- ==================== -->
+    <!-- نافذة تفاصيل طلب التسجيل -->
+    <!-- ==================== -->
+    <div id="modal-request-detail" class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i> تفاصيل طلب التسجيل</h3>
+            <button class="modal-close" onclick="closeModal('modal-request-detail')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                    <span id="request-detail-name">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-id-card"></i> الكود الجامعي</label>
+                    <span id="request-detail-code">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-graduation-cap"></i> السنة الدراسية</label>
+                    <span id="request-detail-year">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <span id="request-detail-phone">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-id-badge"></i> الرقم القومي</label>
+                    <span id="request-detail-national-id">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-key"></i> كلمة مرور SIS</label>
+                    <span id="request-detail-password" class="password-field">
+                        <span class="password-hidden">••••••••</span>
+                        <button class="btn-show-password" onclick="toggleRequestPassword()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-calendar"></i> تاريخ الطلب</label>
+                    <span id="request-detail-date">-</span>
+                </div>
+                <div class="detail-item full-width">
+                    <label><i class="fas fa-image"></i> صورة البطاقة الجامعية</label>
+                    <div class="id-photo-container">
+                        <img id="request-detail-photo" src="" alt="صورة البطاقة" onclick="openImageFullscreen(this.src)">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" id="request-detail-id">
+            <button class="btn btn-success" onclick="approveRequest()">
+                <i class="fas fa-check"></i>
+                قبول الطلب
+            </button>
+            <button class="btn btn-danger" onclick="openRejectModal()">
+                <i class="fas fa-times"></i>
+                رفض الطلب
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-request-detail')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- نافذة سبب الرفض -->
+    <!-- ==================== -->
+    <div id="modal-reject-reason" class="modal modal-small">
+        <div class="modal-header">
+            <h3><i class="fas fa-times-circle"></i> سبب الرفض</h3>
+            <button class="modal-close" onclick="closeModal('modal-reject-reason')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>يُرجى إدخال سبب رفض الطلب:</label>
+                <textarea id="reject-reason" placeholder="اكتب سبب الرفض هنا..." rows="4"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" onclick="confirmRejectRequest()">
+                <i class="fas fa-times"></i>
+                تأكيد الرفض
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-reject-reason')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- نافذة تفاصيل الشكوى -->
+    <!-- ==================== -->
+    <div id="modal-complaint-detail" class="modal modal-large">
+        <div class="modal-header">
+            <h3><i class="fas fa-envelope-open-text"></i> تفاصيل الشكوى <span id="complaint-detail-ticket"></span></h3>
+            <button class="modal-close" onclick="closeModal('modal-complaint-detail')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="complaint-detail-grid">
+                <div class="complaint-info-section">
+                    <h4>معلومات الطالب</h4>
+                    <div class="detail-grid">
+                        <div class="detail-item">
+                            <label><i class="fas fa-user"></i> الاسم</label>
+                            <span id="complaint-detail-name">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label><i class="fas fa-id-card"></i> الكود</label>
+                            <span id="complaint-detail-code">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label><i class="fas fa-graduation-cap"></i> السنة</label>
+                            <span id="complaint-detail-year">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label><i class="fas fa-calendar"></i> التاريخ</label>
+                            <span id="complaint-detail-date">-</span>
+                        </div>
+                        <div class="detail-item">
+                            <label><i class="fas fa-info-circle"></i> الحالة</label>
+                            <span id="complaint-detail-status">-</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="complaint-content-section">
+                    <h4><i class="fas fa-comment-alt"></i> نص الشكوى</h4>
+                    <div class="complaint-content-box" id="complaint-detail-content">
+                        -
+                    </div>
+                </div>
+                
+                <div class="complaint-reply-section" id="complaint-reply-section">
+                    <h4><i class="fas fa-reply"></i> الرد</h4>
+                    <div class="reply-info" id="reply-info" style="display: none;">
+                        <p><strong>تم الرد بواسطة:</strong> <span id="complaint-detail-replied-by">-</span></p>
+                        <p><strong>تاريخ الرد:</strong> <span id="complaint-detail-replied-at">-</span></p>
+                    </div>
+                    <div class="complaint-content-box reply-box" id="complaint-detail-reply">
+                        لم يتم الرد بعد
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" id="complaint-detail-id">
+            <!-- ✅ زر العودة للطالب (يظهر عند الحاجة) -->
+            <input type="hidden" id="complaint-from-student-id">
+            <button class="btn btn-info" id="btn-back-to-student" style="display: none;" onclick="backToStudentFromComplaint()">
+                <i class="fas fa-arrow-right"></i>
+                العودة للطالب
+            </button>
+            <div id="complaint-actions">
+                <button class="btn btn-warning" id="btn-mark-reviewed" onclick="markComplaintReviewed()">
+                    <i class="fas fa-eye"></i>
+                    تحديد كمُراجَع
+                </button>
+                <button class="btn btn-primary" id="btn-reply" onclick="openReplyModal()">
+                    <i class="fas fa-reply"></i>
+                    الرد على الشكوى
+                </button>
+            </div>
+            <button class="btn btn-secondary" onclick="closeModal('modal-complaint-detail')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- نافذة الرد على الشكوى -->
+    <!-- ==================== -->
+    <div id="modal-reply" class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-reply"></i> الرد على الشكوى</h3>
+            <button class="modal-close" onclick="closeModal('modal-reply')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label>نص الرد:</label>
+                <textarea id="reply-text" placeholder="اكتب ردك على الشكوى هنا..." rows="6"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="sendReply()">
+                <i class="fas fa-paper-plane"></i>
+                إرسال الرد
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-reply')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- ✅ نافذة تفاصيل الطالب (معدّلة) -->
+    <!-- ==================== -->
+    <div id="modal-student-detail" class="modal modal-large">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-graduate"></i> بيانات الطالب</h3>
+            <button class="modal-close" onclick="closeModal('modal-student-detail')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="detail-grid">
+                <div class="detail-item">
+                    <label><i class="fas fa-user"></i> الاسم الكامل</label>
+                    <span id="student-detail-name">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-id-card"></i> الكود الجامعي</label>
+                    <span id="student-detail-code">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-graduation-cap"></i> السنة الدراسية</label>
+                    <span id="student-detail-year">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-phone"></i> رقم الهاتف</label>
+                    <span id="student-detail-phone">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-calendar"></i> تاريخ التسجيل</label>
+                    <span id="student-detail-date">-</span>
+                </div>
+                <div class="detail-item">
+                    <label><i class="fas fa-clipboard-list"></i> عدد الشكاوى</label>
+                    <span id="student-detail-complaints-count">-</span>
+                </div>
+                
+                <!-- ✅ كلمة مرور SIS -->
+                <div class="detail-item">
+                    <label><i class="fas fa-key"></i> كلمة مرور SIS</label>
+                    <span id="student-detail-password" class="password-field">
+                        <span class="password-hidden">••••••••</span>
+                        <button class="btn-show-password" onclick="toggleStudentPassword()">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </span>
+                </div>
+                
+                <!-- ✅ صورة الكارنيه -->
+                <div class="detail-item">
+                    <label><i class="fas fa-id-badge"></i> صورة الكارنيه</label>
+                    <button class="btn btn-secondary btn-sm" onclick="openStudentIdCard()">
+                        <i class="fas fa-image"></i>
+                        عرض صورة الكارنيه
+                    </button>
+                </div>
+            </div>
+            
+            <div class="student-complaints-section">
+                <h4><i class="fas fa-envelope"></i> شكاوى هذا الطالب</h4>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>رقم الشكوي</th>
+                                <th>الحالة</th>
+                                <th>التاريخ</th>
+                                <th>إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="student-complaints-table">
+                            <tr>
+                                <td colspan="4" class="empty-state">
+                                    <p>لا توجد شكاوى</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <input type="hidden" id="student-detail-id">
+            <input type="hidden" id="student-detail-telegram-id">
+            <!-- ✅ زر إرسال رسالة -->
+            <button class="btn btn-primary" onclick="openSendMessageModal()">
+                <i class="fas fa-paper-plane"></i>
+                إرسال رسالة للطالب
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-student-detail')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- ✅ نافذة عرض صورة الكارنيه -->
+    <!-- ==================== -->
+    <div id="modal-student-id-card" class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-id-badge"></i> صورة الكارنيه الجامعي</h3>
+            <button class="modal-close" onclick="closeModal('modal-student-id-card')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="id-card-preview">
+                <img id="student-id-card-image" src="" alt="صورة الكارنيه" onclick="openImageFullscreen(this.src)">
+                <p class="hint-text">اضغط على الصورة للتكبير</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="downloadStudentIdCard()">
+                <i class="fas fa-download"></i>
+                تنزيل الصورة
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-student-id-card')">
+                إغلاق
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- ✅ نافذة إرسال رسالة للطالب -->
+    <!-- ==================== -->
+    <div id="modal-send-message" class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-paper-plane"></i> إرسال رسالة للطالب</h3>
+            <button class="modal-close" onclick="closeModal('modal-send-message')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="message-recipient-info">
+                <p><i class="fas fa-user"></i> <strong>المستلم:</strong> <span id="message-recipient-name">-</span></p>
+                <p><i class="fas fa-id-card"></i> <strong>الكود:</strong> <span id="message-recipient-code">-</span></p>
+            </div>
+            <div class="form-group">
+                <label>نص الرسالة:</label>
+                <textarea id="message-text" placeholder="اكتب رسالتك للطالب هنا..." rows="6"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="confirmSendMessage()">
+                <i class="fas fa-paper-plane"></i>
+                إرسال
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-send-message')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- ✅ نافذة تأكيد إرسال الرسالة -->
+    <!-- ==================== -->
+    <div id="modal-confirm-message" class="modal modal-small">
+        <div class="modal-header">
+            <h3><i class="fas fa-question-circle"></i> تأكيد الإرسال</h3>
+            <button class="modal-close" onclick="closeModal('modal-confirm-message')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p>هل أنت متأكد من إرسال هذه الرسالة إلى الطالب؟</p>
+            <div class="confirm-message-preview">
+                <p id="confirm-message-text"></p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="sendMessageToStudent()">
+                <i class="fas fa-check"></i>
+                تأكيد الإرسال
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-confirm-message')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- ✅ نافذة إضافة مسؤول (معدّلة - رفع صورة) -->
+    <!-- ==================== -->
+    <div id="modal-add-admin" class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-plus"></i> إضافة مسؤول جديد</h3>
+            <button class="modal-close" onclick="closeModal('modal-add-admin')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="add-admin-form">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> اسم المستخدم</label>
+                    <input type="text" id="admin-username" required placeholder="أدخل اسم المستخدم">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-id-badge"></i> الاسم الظاهر</label>
+                    <input type="text" id="admin-display-name" required placeholder="أدخل الاسم الظاهر">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> كلمة المرور</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="admin-password" required placeholder="أدخل كلمة المرور">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('admin-password', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> تأكيد كلمة المرور</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="admin-password-confirm" required placeholder="أعد إدخال كلمة المرور">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('admin-password-confirm', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ✅ رفع صورة بدلاً من رابط -->
+                <div class="form-group">
+                    <label><i class="fas fa-image"></i> صورة الملف الشخصي (اختياري)</label>
+                    <div class="photo-upload-container">
+                        <div class="photo-preview" id="admin-photo-preview">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="photo-upload-actions">
+                            <label for="admin-photo-file" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-upload"></i>
+                                اختر صورة
+                            </label>
+                            <input type="file" id="admin-photo-file" accept="image/*" onchange="previewAdminPhoto(this, 'admin-photo-preview')" style="display: none;">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeAdminPhoto('admin-photo-preview', 'admin-photo-file')" style="display: none;" id="admin-remove-photo">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <p class="upload-hint">PNG, JPG حتى 2MB</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-shield-alt"></i> الصلاحيات</label>
+                    <div class="permissions-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perm-view-complaints" checked>
+                            <span>عرض الشكاوى</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perm-reply-complaints">
+                            <span>الرد على الشكاوى</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perm-mark-reviewed">
+                            <span>تحديد كمُراجَع</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perm-search-students">
+                            <span>البحث عن الطلاب</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perm-review-accounts">
+                            <span>مراجعة طلبات التسجيل</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="perm-manage-admins">
+                            <span>إدارة المسؤولين</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="addAdmin()">
+                <i class="fas fa-plus"></i>
+                إضافة المسؤول
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-add-admin')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- ✅ نافذة تعديل مسؤول (معدّلة - رفع صورة) -->
+    <!-- ==================== -->
+    <div id="modal-edit-admin" class="modal">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-edit"></i> تعديل بيانات المسؤول</h3>
+            <button class="modal-close" onclick="closeModal('modal-edit-admin')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="edit-admin-form">
+                <input type="hidden" id="edit-admin-id">
+                
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> اسم المستخدم</label>
+                    <input type="text" id="edit-admin-username" placeholder="اسم المستخدم">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-id-badge"></i> الاسم الظاهر</label>
+                    <input type="text" id="edit-admin-display-name" required placeholder="أدخل الاسم الظاهر">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-lock"></i> كلمة المرور الجديدة (اتركها فارغة إذا لم ترد تغييرها)</label>
+                    <div class="password-input-wrapper">
+                        <input type="password" id="edit-admin-password" placeholder="كلمة مرور جديدة">
+                        <button type="button" class="toggle-password" onclick="togglePasswordVisibility('edit-admin-password', this)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- ✅ رفع صورة بدلاً من رابط -->
+                <div class="form-group">
+                    <label><i class="fas fa-image"></i> صورة الملف الشخصي</label>
+                    <div class="photo-upload-container">
+                        <div class="photo-preview" id="edit-admin-photo-preview">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="photo-upload-actions">
+                            <label for="edit-admin-photo-file" class="btn btn-secondary btn-sm">
+                                <i class="fas fa-upload"></i>
+                                تغيير الصورة
+                            </label>
+                            <input type="file" id="edit-admin-photo-file" accept="image/*" onchange="previewAdminPhoto(this, 'edit-admin-photo-preview')" style="display: none;">
+                            <button type="button" class="btn btn-danger btn-sm" onclick="removeAdminPhoto('edit-admin-photo-preview', 'edit-admin-photo-file')" style="display: none;" id="edit-admin-remove-photo">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                            <p class="upload-hint">PNG, JPG حتى 2MB</p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="edit-admin-current-photo-url">
+                </div>
+                
+                <div class="form-group">
+                    <label><i class="fas fa-shield-alt"></i> الصلاحيات</label>
+                    <div class="permissions-grid">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-perm-view-complaints">
+                            <span>عرض الشكاوى</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-perm-reply-complaints">
+                            <span>الرد على الشكاوى</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-perm-mark-reviewed">
+                            <span>تحديد كمُراجَع</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-perm-search-students">
+                            <span>البحث عن الطلاب</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-perm-review-accounts">
+                            <span>مراجعة طلبات التسجيل</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-perm-manage-admins">
+                            <span>إدارة المسؤولين</span>
+                        </label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" onclick="updateAdmin()">
+                <i class="fas fa-save"></i>
+                حفظ التغييرات
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-edit-admin')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- نافذة عرض الصورة بالحجم الكامل -->
+    <!-- ==================== -->
+    <div id="modal-image-fullscreen" class="modal-fullscreen" onclick="closeImageFullscreen()">
+        <button class="fullscreen-close" onclick="closeImageFullscreen()">
+            <i class="fas fa-times"></i>
+        </button>
+        <img id="fullscreen-image" src="" alt="صورة">
+        <!-- ✅ زر تنزيل في وضع العرض الكامل -->
+        <button class="fullscreen-download" onclick="event.stopPropagation(); downloadFullscreenImage()">
+            <i class="fas fa-download"></i>
+        </button>
+    </div>
+    
+    <!-- ==================== -->
+    <!-- نافذة التأكيد العامة -->
+    <!-- ==================== -->
+    <div id="modal-confirm" class="modal modal-small">
+        <div class="modal-header">
+            <h3 id="confirm-title"><i class="fas fa-question-circle"></i> تأكيد</h3>
+            <button class="modal-close" onclick="closeModal('modal-confirm')">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <p id="confirm-message">هل أنت متأكد؟</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-danger" id="confirm-yes-btn">
+                <i class="fas fa-check"></i>
+                نعم
+            </button>
+            <button class="btn btn-secondary" onclick="closeModal('modal-confirm')">
+                إلغاء
+            </button>
+        </div>
+    </div>
+    
+    <!-- ============================================================ -->
+    <!-- إشعارات Toast -->
+    <!-- ============================================================ -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- ============================================================ -->
+    <!-- Supabase JS SDK -->
+    <!-- ============================================================ -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Argon2 Browser (للتحقق من كلمة المرور) -->
+    <script src="https://cdn.jsdelivr.net/npm/argon2-browser@1.18.0/dist/argon2-bundled.min.js"></script>
+    
+    <!-- Main Script -->
+    <script src="script.js"></script>
+    
+    <!-- تحديث السنة الحالية في الفوتر -->
+    <script>
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
